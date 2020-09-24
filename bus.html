@@ -20,12 +20,19 @@
 <div class="examples-nav"></div>
 <p class="ref-notice">&nbsp;</p>
 <div class="example"><script type="application/processing">
-size(800, 500);
-background(250);
-noStroke();
 
-fill(204);
-triangle(18, 18, 18, 360, 81, 360);
+void setup() {
+	size(800, 500);
+	background(250);
+	frameRate(0);
+}
+
+void draw() { drawBus(100, 100); }
+
+void drawBus(Int x, Int y) {
+	fill(204);
+	triangle(x, x, 18, 360, 81, 360);
+}
 
 </script><canvas width="800" height="500"></canvas>
 <p class="doc">&nbsp;</p>
