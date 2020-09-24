@@ -21,17 +21,109 @@
 <p class="ref-notice">&nbsp;</p>
 <div class="example"><script type="application/processing">
 
+color   busYellow = #FFDD00;
+color lightYellow = #FFFF22;
+color  darkGrey = #333333;
+color lightGrey = #999999;
+
+Int windowWidth  = 49;
+Int windowHeight = 55;
+
 void setup() {
 	size(800, 500);
 	background(250);
 	frameRate(0);
 }
 
-void draw() { drawBus(100, 100); }
+void draw() {
+	drawBus(20, 100);
+}
 
 void drawBus(Int x, Int y) {
-	fill(204);
-	triangle(x, x, 18, 360, 81, 360);
+	noStroke();
+
+	fill(busYellow);
+	rect(x+15, y+5, 589, 35, 0, 20, 0, 0); // top rect
+
+	drawWindows(x + 15, y + 40);
+
+	noStroke();
+
+	fill(busYellow);
+	rect(x+15, y+97, 503, 3);
+	fill(darkGrey);
+	rect(x+15, y+100, 503, 5); // dark line below windows
+	fill(busYellow);
+	rect(x+15, y+105, 503, 26); // South Park Elementary rect
+
+	drawStripes(x+15, y+131);
+
+	fill(busYellow);
+	noStroke();
+	rect(x+15, y+156, 503, 29);
+
+	fill(darkGrey);
+	rect(x+15, y+185, 650, 3);
+
+	fill(lightGrey);
+	noStroke()
+	rect(x, y+153, 30, 35, 7, 7, 7, 7); // Back bumper
+}
+
+void drawWindow(Int x, Int y) {
+	noStroke();
+	fill(busYellow);
+	rect(x,    y,           8, windowHeight);
+	rect(x,    y, windowWidth,            5);
+	rect(x, y+27, windowWidth,            3);
+	rect(x, y+50, windowWidth,            5);
+}
+
+void drawWindows(Int x, Int y) {
+	for(Int i=0; i<10; i++) {
+		Int xOffset = i * windowWidth;
+		drawWindow(x + xOffset, y + 1);
+	}
+
+	stroke(lightGrey);
+	strokeWeight(1);
+	Int xOffset = 10 * windowWidth;
+	rect(x + xOffset, y, 12, windowHeight + 1);
+
+	// vertical detail lines
+	line(x + 2 * windowWidth, y, x + 2 * windowWidth, y + windowHeight);
+	line(x + 3 * windowWidth, y, x + 3 * windowWidth, y + windowHeight);
+	line(x + 4 * windowWidth, y, x + 4 * windowWidth, y + windowHeight);
+	line(x + 8 * windowWidth, y, x + 8 * windowWidth, y + windowHeight);
+	line(x + 9 * windowWidth, y, x + 9 * windowWidth, y + windowHeight);
+
+	// top and bottom detail lines
+	line(x,                    y, x + xOffset + 12,  y);
+	line(x, y + 1 + windowHeight, x + xOffset + 12,  y + 1 + windowHeight);
+}
+
+void drawStripe(Int x, Int y) { // stripe height is 7
+	fill(lightYellow);
+	stroke(darkGrey);
+	strokeWeight(1);
+	rect(x, y, 502, 6);
+
+	stroke(lightGrey);
+	line(x+1, y+2, x+500, y+2);
+	
+	stroke(darkGrey);
+	line(x+1, y+2, x+1, y+5);
+	line(x+501, y+2, x+501, y+5);
+	line(x, y+7, x+502, y+7);
+}
+
+void drawStripes(Int x, Int y) {
+	for(Int i=0; i<3; i++) {
+		Int yOffset = i * 8;
+		drawStripe(x, y + yOffset);
+	}
+	Int yOffset = 3 * 8;
+	line(x, y + yOffset, x + 502, y + yOffset);
 }
 
 </script><canvas width="800" height="500"></canvas>
