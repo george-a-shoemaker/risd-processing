@@ -68,6 +68,12 @@ void drawBus(Int x, Int y) {
 	fill(lightGrey);
 	noStroke()
 	rect(x, y+153, 30, 35, 7, 7, 7, 7); // Back bumper
+
+	drawDoors(x+518, y+40);
+
+	fill(busYellow);
+	noStroke();
+	rect(x+587, y+40, 3, 145);
 }
 
 void drawWindow(Int x, Int y) {
@@ -102,7 +108,7 @@ void drawWindows(Int x, Int y) {
 	line(x, y + 1 + windowHeight, x + xOffset + 12,  y + 1 + windowHeight);
 }
 
-void drawStripe(Int x, Int y) { // stripe height is 7
+void drawStripe(Int x, Int y) {
 	fill(lightYellow);
 	stroke(darkGrey);
 	strokeWeight(1);
@@ -125,6 +131,35 @@ void drawStripes(Int x, Int y) {
 	Int yOffset = 3 * 8;
 	line(x, y + yOffset, x + 502, y + yOffset);
 }
+
+void drawDoor(Int x, Int y) {
+	noStroke();
+	fill(busYellow);
+	rect( x+1,   y+1,  4, 143); // left
+	rect(x+29,   y+1,  4, 143); // right
+	rect( x+1,     y, 33, 5);   // top
+	rect( x+1, y+140, 33, 4);   // bottom
+	rect( x+1,  y+55, 33, 6);   // middle
+
+	stroke(darkGrey);
+	noFill();
+	rect(x, y, 33, 144);    // outer detail
+	rect(x+5, y+5, 23, 49); // inner top
+	rect(x+5, y+61, 23, 78); // inner bottom
+}
+
+void drawDoors(Int x, Int y) {
+	// steps behind drawDoors
+	fill(darkGrey);
+	noStroke();
+	rect(x, y+75, 69, 70);
+	fill(lightGrey);
+	rect(x, y+55, 69, 25);
+	
+	drawDoor(   x, y);
+	drawDoor(x+35, y);
+}
+
 
 </script><canvas width="800" height="500"></canvas>
 <p class="doc">&nbsp;</p>
