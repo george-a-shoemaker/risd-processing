@@ -83,20 +83,26 @@ void drawWindow(Int x, Int y) {
 	rect(x,    y, windowWidth,            5);
 	rect(x, y+27, windowWidth,            3);
 	rect(x, y+50, windowWidth,            5);
+
+	noFill();
+	stroke(lightGrey);
+	rect(x+8, y+5, windowWidth-8, 21);
+	rect(x+8, y+30, windowWidth-8, 19);
 }
 
 void drawWindows(Int x, Int y) {
-	for(Int i=0; i<10; i++) {
+	for(Int i=9; i>=0; i--) {
 		Int xOffset = i * windowWidth;
 		drawWindow(x + xOffset, y + 1);
 	}
 
 	stroke(lightGrey);
-	strokeWeight(1);
+	fill(busYellow);
 	Int xOffset = 10 * windowWidth;
 	rect(x + xOffset, y, 12, windowHeight + 1);
 
 	// vertical detail lines
+	line(x, y, x, y + windowHeight);
 	line(x + 2 * windowWidth, y, x + 2 * windowWidth, y + windowHeight);
 	line(x + 3 * windowWidth, y, x + 3 * windowWidth, y + windowHeight);
 	line(x + 4 * windowWidth, y, x + 4 * windowWidth, y + windowHeight);
