@@ -32,18 +32,22 @@ Int windowHeight = 55;
 
 void setup() {
 	size(800, 500);
-	background(250);
+	background(50, 123, 168);
 	frameRate(0);
 }
 
 void draw() {
-	drawBus(20, 100);
+	drawBus(10, 20);
+	drawBus(70, 250);
 }
 
 void drawBus(Int x, Int y) {
-	noStroke();
+
+	fill(lightYellow);
+	ellipse(x+593, y+7, 10, 12); // top light
 
 	fill(busYellow);
+	stroke(lightGrey);
 	rect(x+15, y+5, 589, 35, 0, 20, 0, 0); // top rect
 
 	drawWindows(x + 15, y + 40);
@@ -51,11 +55,19 @@ void drawBus(Int x, Int y) {
 	noStroke();
 
 	fill(busYellow);
-	rect(x+15, y+97, 503, 3);
+	stroke(lightGrey);
+	rect(x+15, y+96, 503, 4);
+
+	stroke(lightGrey);
+	rect(x+15, y+104, 503, 27); // South Park Elementary rect
+
+	fill(0);
+	text("ERIE  ELEMENTARY    R-1", x+240, y+ 123);
+
+	noStroke();
 	fill(darkGrey);
 	rect(x+15, y+100, 503, 5); // dark line below windows
 	fill(busYellow);
-	rect(x+15, y+105, 503, 26); // South Park Elementary rect
 
 	drawStripes(x+15, y+131);
 
@@ -82,8 +94,6 @@ void drawBus(Int x, Int y) {
 	noStroke();
 	rect(x+596, y+40, 4, 49 )// windshield
 
-	
-
 	noStroke();
 	fill(0);
 	arc(x+148, y+185, 89, 89, PI, 2*PI); // left wheel well
@@ -96,9 +106,7 @@ void drawBus(Int x, Int y) {
 	fill(lightGrey);
 	ellipse(x+703, y+125, 8, 20); // upper front light
 	ellipse(x+702, y+150, 8, 14); // lower front light
-
 	
-	noStroke();
 	fill(busYellow);
 	rect(x+603, y+89, 91, 80, 0, 30, 0, 0); // top of hood
 	rect(x+603, y+106, 99, 79, 0, 20, 0, 0); // front of bus
@@ -121,9 +129,6 @@ void drawBus(Int x, Int y) {
 
 	stroke(lightGrey);
 	line(x+604, y+89, x+604, y+184);
-
-
-
 }
 
 void drawWindow(Int x, Int y) {
@@ -232,7 +237,6 @@ void drawWheel(Int x, Int y) {
 		y + sin(HALF_PI + QUARTER_PI) * 37
 	);
 
-
 	noStroke();
 	fill(lightGrey);
 	ellipse(x, y, 50, 50);
@@ -243,7 +247,6 @@ void drawWheel(Int x, Int y) {
 	ellipse(x, y, 38, 38);
 	strokeWeight(1); // other code assumes strokeWeight == 1
 }
-
 
 </script><canvas width="800" height="500"></canvas>
 <p class="doc">&nbsp;</p>
