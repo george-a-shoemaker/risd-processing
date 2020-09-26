@@ -23,8 +23,9 @@
 
 color   busYellow = #FFDD00;
 color lightYellow = #FFFF22;
-color  darkGrey = #333333;
-color lightGrey = #999999;
+color    darkGrey = #404040;
+color    tireGrey = #333333;
+color   lightGrey = #999999;
 
 Int windowWidth  = 49;
 Int windowHeight = 55;
@@ -62,18 +63,67 @@ void drawBus(Int x, Int y) {
 	noStroke();
 	rect(x+15, y+156, 503, 29);
 
-	fill(darkGrey);
-	rect(x+15, y+185, 650, 3);
+	fill(0);
+	rect(x+15, y+185, 680, 3); // bottom rect
 
 	fill(lightGrey);
 	noStroke()
-	rect(x, y+153, 30, 35, 7, 7, 7, 7); // Back bumper
+	rect(x, y+153, 30, 35, 7, 7, 7, 7); // back bumper
 
 	drawDoors(x+518, y+40);
 
-	fill(busYellow);
+	fill(busYellow); 
 	noStroke();
-	rect(x+587, y+40, 3, 145);
+	rect(x+587, y+40, 3, 145); // rectangle to right of doors
+
+	triangle(x+590, y+40, x+596, y+40, x+590, y+50)
+
+	fill(lightYellow);
+	noStroke();
+	rect(x+596, y+40, 4, 49 )// windshield
+
+	
+
+	noStroke();
+	fill(0);
+	arc(x+148, y+185, 89, 89, PI, 2*PI); // left wheel well
+	drawWheel(x+148, y+184);
+
+	fill(busYellow); // left hood
+	noStroke();
+	rect(x+589, y+89, 14, 96);
+
+	fill(lightGrey);
+	ellipse(x+703, y+125, 8, 20); // upper front light
+	ellipse(x+702, y+150, 8, 14); // lower front light
+
+	
+	noStroke();
+	fill(busYellow);
+	rect(x+603, y+89, 91, 80, 0, 30, 0, 0); // top of hood
+	rect(x+603, y+106, 99, 79, 0, 20, 0, 0); // front of bus
+
+	noStroke();
+	fill(0);
+	arc(x+650, y+185, 89, 89, PI, 2*PI); // right wheel well
+	drawWheel(x+650, y+184);
+
+	fill(lightGrey);
+	noStroke();
+	rect(x+692, y+169, 8, 19); // front bumper
+	stroke(darkGrey);
+	rect(x+697, y+163, 14, 30, 7, 7, 7, 7);
+
+	stroke(0); // upper hood detail
+	noFill();
+	arc(x+645, y+305, 500, 400, PI*1.4487, PI*1.56);
+	arc(x+645, y+180, 120, 120, PI*1.26, PI*1.91);
+
+	stroke(lightGrey);
+	line(x+604, y+89, x+604, y+184);
+
+
+
 }
 
 void drawWindow(Int x, Int y) {
@@ -124,9 +174,9 @@ void drawStripe(Int x, Int y) {
 	line(x+1, y+2, x+500, y+2);
 	
 	stroke(darkGrey);
-	line(x+1, y+2, x+1, y+5);
+	line(x+1,   y+2, x+1,   y+5);
 	line(x+501, y+2, x+501, y+5);
-	line(x, y+7, x+502, y+7);
+	line(x,     y+7, x+502, y+7);
 }
 
 void drawStripes(Int x, Int y) {
@@ -155,15 +205,43 @@ void drawDoor(Int x, Int y) {
 }
 
 void drawDoors(Int x, Int y) {
-	// steps behind drawDoors
+	// steps behind doors
 	fill(darkGrey);
 	noStroke();
 	rect(x, y+75, 69, 70);
+
 	fill(lightGrey);
 	rect(x, y+55, 69, 25);
 	
 	drawDoor(   x, y);
 	drawDoor(x+35, y);
+}
+
+void drawWheel(Int x, Int y) {
+	fill(tireGrey);
+	noStroke();
+
+	ellipse(x, y, 78, 78);
+	
+	stroke(255);
+	strokeWeight(2);
+	line( // tire reflection
+		x + cos(-QUARTER_PI) * 37,
+		y + sin(-QUARTER_PI) * 37,
+		x + cos(HALF_PI + QUARTER_PI) * 37,
+		y + sin(HALF_PI + QUARTER_PI) * 37
+	);
+
+
+	noStroke();
+	fill(lightGrey);
+	ellipse(x, y, 50, 50);
+
+	stroke(tireGrey);
+	strokeWeight(2);
+	noFill();
+	ellipse(x, y, 38, 38);
+	strokeWeight(1); // other code assumes strokeWeight == 1
 }
 
 
