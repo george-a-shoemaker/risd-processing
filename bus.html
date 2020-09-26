@@ -214,6 +214,12 @@ void drawDoors(Int x, Int y) {
 	fill(darkGrey);
 	noStroke();
 	rect(x, y+75, 69, 70);
+	stroke(0);
+	for (Int i=0; i<4; i++) {
+		Int _y = y+75+i*18;
+		line(x, _y, x+69, _y);
+	}
+
 
 	fill(lightGrey);
 	rect(x, y+55, 69, 25);
@@ -231,10 +237,10 @@ void drawWheel(Int x, Int y) {
 	stroke(255);
 	strokeWeight(2);
 	line( // tire reflection
-		x + cos(-QUARTER_PI) * 37,
-		y + sin(-QUARTER_PI) * 37,
-		x + cos(HALF_PI + QUARTER_PI) * 37,
-		y + sin(HALF_PI + QUARTER_PI) * 37
+		x + cos(-PI*0.2) * 37,
+		y + sin(-PI*0.2) * 37,
+		x + cos(PI*0.8) * 37,
+		y + sin(PI*0.8) * 37
 	);
 
 	noStroke();
