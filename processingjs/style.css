@@ -19,6 +19,7 @@ body {
 	color				: #1c1c1c;
 }
 
-p {
-	
+.reference-img {
+	width: 800px;
+	object-fit: contain
 }
