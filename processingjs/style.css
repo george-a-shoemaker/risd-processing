@@ -5,7 +5,7 @@ body {
 	padding				: 0;
 	overflow-y			: scroll;
 	
-	background-color	: #ddd;  /* #FFFFFF; */  /* #333322 */
+	background-color	: /* #ddd; */   #f5f5f5;  /* #333322 */
 	
 	font-family			: Arial, Helvetica, sans-serif; 
 	
