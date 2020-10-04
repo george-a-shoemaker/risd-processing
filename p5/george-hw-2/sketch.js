@@ -13,20 +13,18 @@ class JuggleBall extends Jugglable {
 
 const h = 10;
 const duration = 30;
-const balls = JuggleToss.getTosses(h, duration).map(
-    (toss, i) => new JuggleBall(i * 30, 750, toss)
-)
+const tosses = JuggleToss.getTosses(h, duration)
+let ball = new JuggleBall(20, 430, tosses[2])
 
 function setup() {
     stroke(0);
-    const canvas = createCanvas(400, 800);
+    const canvas = createCanvas(800, 450);
     canvas.parent('sketch-holder');
     canvas.style("display", "block");
-    // Inject canvas into <div> marked with 'sketch-holder' class
 }
 
 function draw() {
     background(220)
-    balls.forEach(ball => ball.draw())
-    line(0, 760, 400, 760)
+    ball.draw()
+    line(0, 430, 800, 430)
 }
