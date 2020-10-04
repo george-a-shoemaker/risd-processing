@@ -23,25 +23,20 @@ class JuggleToss {
         let h = h_1 * tossIndex * tossIndex
         this.duration = duration_1 * tossIndex
         this.func = Parabola.getScaled(h, this.duration)
-
     }
 }
 
 class Jugglable {
-  constructor(toss) {
-    this.toss = toss
-    this.position = 0
-  }
+    constructor(toss, onComplete) {
+        this.toss = toss
+        this.position = 0
+        this.onComplete = onComplete
+    }
 
-  step() {
-    if (this.position >= this.toss.duration - 1) return this.reset()
-    this.position += 1
-  }
-
-    reset() { this.position = 0 }
-
-    set(x) {
-        if (x < 0 || x >= duration) return this.reset()
-        this.position = x
+    stepToss() {
+        if (this.position >= this.toss.duration - 1) {
+            this.position = 0
+            if (this.onComplete != null) this.onComplete()
+        } else this.position += 1
     }
 }
