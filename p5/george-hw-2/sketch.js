@@ -65,7 +65,7 @@ for (let i=0; i<balls.length; i++) {
     balls[i].onComplete = () => {
         balls[i].toss = tosses[jugglePattern.next()]
         oscs[i].start()
-        oscs[i].amp(1)
+        oscs[i].amp(0.5)
         oscs[i].amp(0,decay)
         oscs[i].stop(0.5)
     }
