@@ -74,6 +74,8 @@ for (let i=0; i<balls.length; i++) {
 function setup() {
     stroke(0);
     frameRate(frameRate);
+    console.log(userStartAudio == null)
+    userStartAudio();
    
     console.log(osc == null)
     const canvas = createCanvas(winWidth, winHeight)
@@ -86,3 +88,7 @@ function draw() {
     balls.forEach(ball => ball.draw())
     line(0, 440, winWidth, 440)
 }
+
+function mousePressed() {
+    userStartAudio();
+  }
