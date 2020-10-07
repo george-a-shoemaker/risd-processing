@@ -73,6 +73,8 @@ for (let i=0; i<balls.length; i++) {
     }
 }
 
+let sequenceString = 'Sequence: [' + jugglePattern.sequence.join(', ') + ']'
+
 function setup() {
     stroke(0);
     frameRate(frameRate);
@@ -87,6 +89,7 @@ function setup() {
 
 function draw() {
     background(220)
+    text(sequenceString, 660, 20)
     balls.forEach(ball => ball.draw())
     line(0, 440, winWidth, 440)
 }
