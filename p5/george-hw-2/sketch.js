@@ -42,7 +42,7 @@ const fps = 60
 const h = 5;
 const duration = 30;
 const tosses = JuggleToss.getTosses(h, duration)
-const jugglePattern = new JugglePattern([1,2,3,5,3,6]);
+const jugglePattern = new JugglePattern([1,9,7,5,3]);
 
 const xSpacer = 30
 const xAnchor = winWidth / 2 - xSpacer * jugglePattern.sequence.length / 2
