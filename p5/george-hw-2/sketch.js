@@ -42,7 +42,7 @@ const fps = 60
 const h = 5;
 const duration = 30;
 const tosses = JuggleToss.getTosses(h, duration)
-const jugglePattern = new JugglePattern([1,9,7,5,3]);
+const jugglePattern = new JugglePattern([2,2,5,4,3]);
 
 const xSpacer = 30
 const xAnchor = winWidth / 2 - xSpacer * jugglePattern.sequence.length / 2
@@ -56,7 +56,8 @@ let balls = JuggleBall.getBalls(
     jugglePattern.sequence.length,
     h, duration);
 
-let oscs = [196, 220, 247, 262, 294, 330, 349, 392, 440, 494, 523].map(
+// let oscs = [196, 220, 247, 262, 294, 330, 349, 392, 440, 494, 523].map(
+ let oscs = [196, 247, 294, 349, 440, 523].map(
     hertz => new p5.Oscillator(hertz, 'sine')
 )
 
@@ -65,7 +66,8 @@ for (let i=0; i<balls.length; i++) {
     balls[i].onComplete = () => {
         balls[i].toss = tosses[jugglePattern.next()]
         oscs[i].start()
-        oscs[i].amp(0.5)
+        oscs[i].amp(0)
+        oscs[i].amp(0.05,0.05)
         oscs[i].amp(0,decay)
         oscs[i].stop(0.5)
     }
