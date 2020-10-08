@@ -3,6 +3,11 @@ class JuggleBall extends Jugglable {
         super(toss)
         this.x = x
         this.y = y
+        this.colorScalar = 1
+    }
+
+    static getColor(colorScalar) {
+        return color(255, 255*colorScalar, 255*colorScalar)
     }
 
     static getBalls(x, xSpacer, y, n, h, duration) {
@@ -16,6 +21,8 @@ class JuggleBall extends Jugglable {
     }
 
     draw() {
+        this.colorScalar = constrain(this.colorScalar+0.05, 0, 1)
+        fill(JuggleBall.getColor(this.colorScalar))
         ellipse(this.x, this.y - this.toss.func(this.position), 20, 20)
         this.stepToss()
     }
@@ -69,6 +76,7 @@ for (let i=0; i<balls.length; i++) {
         oscs[i].amp(0.2,0.05)
         oscs[i].amp(0,decay)
         oscs[i].stop(0.5)
+        balls[i].colorScalar = 0;
     }
 }
 
@@ -101,10 +109,12 @@ function setup() {
 }
 
 function draw() {
-    background(220)
+    background(20)
+    fill(0);
     text(sequenceString, 660, 20)
+    stroke(200,0,0);
     balls.forEach(ball => ball.draw())
-    line(0, 440, winWidth, 440)
+    stroke(150,0,0)
 }
 
 function mousePressed() {
