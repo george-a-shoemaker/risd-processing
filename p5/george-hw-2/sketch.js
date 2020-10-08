@@ -8,7 +8,7 @@ class JuggleBall extends Jugglable {
     }
 
     static getColor(colorScalar) {
-        return color(255, 255*colorScalar, 255*colorScalar)
+        return color(250*colorScalar, 250*colorScalar, 250)
     }
 
     static getBalls(x, xSpacer, y, n, h, duration, ballWidth) {
@@ -37,20 +37,21 @@ class JugglePattern {
     }
 
     next() {
+        let prev = this.index
         if (this.index == this.sequence.length - 1) this.index = 0
         else this.index += 1
-        return this.sequence[this.index]
+        return this.sequence[prev]
     }
 }
 
 const winWidth = 800
 const winHeight = 450
-const fps = 60
+const fps = 30
 
 const h = 4;
-const duration = 30;
+const duration = 14;
 const tosses = JuggleToss.getTosses(h, duration)
-const jugglePattern = new JugglePattern([1,2,5,6,8,4,2,1]);
+const jugglePattern = new JugglePattern([1,5,6,2,3,1,4,9]);
 
 const ballWidth = 52
 const xSpacer = 76
@@ -65,9 +66,13 @@ let balls = JuggleBall.getBalls(
     jugglePattern.sequence.length,
     h, duration, ballWidth);
 
- let oscs = [220, 261.626, 329.628, 391.995, 493.883, 587.33, 698.456, 880, 1046.502, 1318.51].map(
-    hertz => new p5.Oscillator(hertz, 'sine')
-)
+//            C        F          A
+let oscs = [ 261.626,  349.228,  440,
+             523.251,  698.456,  880,
+            1046.502, 1396.913, 1760,
+            2093.005].map(
+                 hertz => new p5.Oscillator(hertz, 'sine')
+             )
 
 let decay = (duration-1)/fps
 for (let i=0; i<balls.length; i++) {
@@ -88,7 +93,7 @@ let sequenceString = 'Sequence: [' + jugglePattern.sequence.join(', ') + ']'
 
 function setup() {
     stroke(0);
-    frameRate(frameRate);
+    frameRate(fps);
     console.log(userStartAudio == null)
     userStartAudio();
    
