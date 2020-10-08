@@ -1,20 +1,21 @@
 class JuggleBall extends Jugglable {
-    constructor(x, y, toss) {
+    constructor(x, y, toss, ballWidth) {
         super(toss)
         this.x = x
         this.y = y
         this.colorScalar = 1
+        this.ballWidth = ballWidth
     }
 
     static getColor(colorScalar) {
         return color(255, 255*colorScalar, 255*colorScalar)
     }
 
-    static getBalls(x, xSpacer, y, n, h, duration) {
+    static getBalls(x, xSpacer, y, n, h, duration, ballWidth) {
         let balls = []
         let initialTosses = JuggleToss.getTosses(h, duration)
         for (let i=0; i<n; i++) {
-            let ball = new JuggleBall(x + xSpacer * i, y, initialTosses[i+2])
+            let ball = new JuggleBall(x + xSpacer * i, y, initialTosses[i+2], ballWidth)
             balls.push(ball)
         }
         return balls
@@ -23,7 +24,7 @@ class JuggleBall extends Jugglable {
     draw() {
         this.colorScalar = constrain(this.colorScalar+0.05, 0, 1)
         fill(JuggleBall.getColor(this.colorScalar))
-        ellipse(this.x, this.y - this.toss.func(this.position), 20, 20)
+        ellipse(this.x, this.y - this.toss.func(this.position), this.ballWidth, this.ballWidth)
         this.stepToss()
     }
 }
@@ -46,14 +47,15 @@ const winWidth = 800
 const winHeight = 450
 const fps = 60
 
-const h = 5;
+const h = 4;
 const duration = 30;
 const tosses = JuggleToss.getTosses(h, duration)
-const jugglePattern = new JugglePattern([2,9,5,4,3,1]);
+const jugglePattern = new JugglePattern([1,2,5,6,8,4,2,1]);
 
-const xSpacer = 30
-const xAnchor = winWidth / 2 - xSpacer * jugglePattern.sequence.length / 2
-const yAnchor = 430
+const ballWidth = 52
+const xSpacer = 76
+const xAnchor = winWidth / 2 - xSpacer * jugglePattern.sequence.length / 2 + ballWidth*3/4
+const yAnchor = 410
 
 const osc = new p5.Oscillator('sine');
 console.log(osc == null)
@@ -61,9 +63,9 @@ console.log(osc == null)
 let balls = JuggleBall.getBalls(
     xAnchor, xSpacer, yAnchor,
     jugglePattern.sequence.length,
-    h, duration);
+    h, duration, ballWidth);
 
- let oscs = [196, 247, 294, 349, 440, 523].map(
+ let oscs = [220, 261.626, 329.628, 391.995, 493.883, 587.33, 698.456, 880, 1046.502, 1318.51].map(
     hertz => new p5.Oscillator(hertz, 'sine')
 )
 
@@ -110,9 +112,9 @@ function setup() {
 
 function draw() {
     background(20)
-    fill(0);
-    text(sequenceString, 660, 20)
-    stroke(200,0,0);
+    fill(255);
+    noStroke();
+    text(sequenceString, 10, 20)
     balls.forEach(ball => ball.draw())
     stroke(150,0,0)
 }
