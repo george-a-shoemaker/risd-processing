@@ -44,6 +44,8 @@ class JugglePattern {
     }
 }
 
+// Only accept numbers 1 through 9
+// Max lenght of 10
 function parseInput(str) {
     if (str == null || str.length == 0) return null
     let filtered = str.replace(/[^1-9]/gi, '')
@@ -51,44 +53,40 @@ function parseInput(str) {
     return filtered
 }
 
-const winWidth = 800
-const winHeight = 450
-const fps = 30
-
-const h = 4;         //   height of the lowest toss
-const duration = 15; // duration of the lowest toss
-const tosses = JuggleToss.getTosses(h, duration)
-let jugglePattern; //= new JugglePattern([9]);
-
-const ballWidth = 52
-const xSpacer = 76
-let xAnchor;// = winWidth / 2 - xSpacer * jugglePattern.sequence.length / 2 + ballWidth*3/4
-const yAnchor = 410
-
-let balls;
-
-
-
+// Notes in Hertz, they all sound nice together
 //            C        F          A
 let notes = [ 261.626,  349.228,  440,
               523.251,  698.456,  880,
              1046.502, 1396.913, 1760,
              2093.005 ]
+let oscs = notes.map( note => new p5.Oscillator(note, 'sine') )
 
-let oscs = notes.map( hertz => new p5.Oscillator(hertz, 'sine') )
 
-const decay = (duration-1)/fps
+const h = 4;         // height of the lowest toss
+const duration = 15; // duration in frames of the lowest toss
+const tosses = JuggleToss.getTosses(h, duration)
 
-let sequenceString //= '=> Sequence: [' + jugglePattern.sequence.join(', ') + ']'
 
-function setup() {
-    stroke(0);
-    frameRate(fps);
-    console.log(userStartAudio == null)
+// JuggleBall.getBalls() arguments
+const ballWidth = 52
+const xSpacer = 76
+let xAnchor; // Set by reset()
+const yAnchor = 410
 
-    jugglePattern = new JugglePattern([9]);
+// Set by reset()
+let jugglePattern
+let balls
+let sequenceString
+
+const fps = 30
+const colorDecay = (duration-1)/fps
+
+let input, button;
+
+function reset(sequence) { 
+    jugglePattern = new JugglePattern(sequence)
     xAnchor = winWidth / 2 - xSpacer * jugglePattern.sequence.length / 2 + ballWidth*3/4
-    
+
     balls = JuggleBall.getBalls(
         xAnchor, xSpacer, yAnchor,
         jugglePattern.sequence.length,
@@ -100,64 +98,54 @@ function setup() {
     
             // Not sure why but I perceive higher notes to be louder
             // This is my attempt to normalize that
-            const maxAmp = 0.2 - (notes[i]-notes[0])/8000
+            const maxAmp = (1 -(notes[i]/2000)) * 0.8
     
             balls[i].toss = tosses[jugglePattern.next()]
             oscs[i].start()
             oscs[i].amp(0)
             oscs[i].amp(maxAmp,0.05)
-            oscs[i].amp(0,decay)
+            oscs[i].amp(0,colorDecay)
             oscs[i].stop(0.5)
             balls[i].colorScalar = 0;
         }
     }
+}
+
+const winWidth  = 800
+const winHeight = 450
+
+function setup() {
+    stroke(0);
+    frameRate(fps);
+    textSize(16);
+    
+    input = createInput('');
+    input.position(canvasPosition.x + 30, canvasPosition.y+30);
+    button = createButton('submit');
+    button.position(canvasPosition.x + 184, canvasPosition.y +30);
+    button.mousePressed( () => {
+        let parsed = parseInput(input.value())
+        if (parsed == null) return
+
+        let numberArray = parsed.split('').map( c => parseInt(c) )
+        reset(numberArray)
+        sequenceString = numberArray.join(', ')
+    });
+
+    console.log(userStartAudio == null)
+
+    reset([9])
+    console.log(el in input)
+    sequenceString = 9 
 
     const canvas = createCanvas(winWidth, winHeight)
     canvas.parent('sketch-holder');
     canvas.style("display", "block");
-    
+   
+    // This is a hack
+    // For whatever reason, the button / input position coords are relative to the DOM, not the canvas
     let canvasPosition = _renderer.position()
-        // This is a hack
-        // For whatever reason, the button / input position coords are relative to the DOM, not the canvas
-
-    button = createButton('submit');
-    button.position(canvasPosition.x + 184, canvasPosition.y +30);
-    input = createInput('');
-    input.position(canvasPosition.x + 30, canvasPosition.y+30);
-
-    button.mousePressed( () => {
-        let parsed = parseInput(input.value())
-        if (parsed == null) return
-        let numberArray = parsed.split('').map( c => parseInt(c) )
-        jugglePattern = new JugglePattern(numberArray)
-        xAnchor = winWidth / 2 - xSpacer * jugglePattern.sequence.length / 2 + ballWidth*3/4
-
-        balls = JuggleBall.getBalls(
-            xAnchor, xSpacer, yAnchor,
-            jugglePattern.sequence.length,
-            h, duration, ballWidth
-        );
-    
-        for (let i=0; i<balls.length; i++) {
-            balls[i].onComplete = () => {
-        
-                // Not sure why but I perceive higher notes to be louder
-                // This is my attempt to normalize that
-                const maxAmp = (1 -(notes[i]/2000)) * 0.8//- (notes[i]-notes[0])/20000
-        
-                balls[i].toss = tosses[jugglePattern.next()]
-                oscs[i].start()
-                oscs[i].amp(0)
-                oscs[i].amp(maxAmp,0.05)
-                oscs[i].amp(0,decay)
-                oscs[i].stop(0.5)
-                balls[i].colorScalar = 0;
-            }
-        }
-
-        sequenceString = numberArray.join(', ')
-    });
-    textSize(16);
+   
 }
 
 function draw() {
