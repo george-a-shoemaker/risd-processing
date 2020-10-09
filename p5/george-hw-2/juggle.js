@@ -1,6 +1,6 @@
 class Parabola {
     static basic(x) { return -Math.pow(x - 1, 2) + 1 }
-    static getWidthScalar(w) { return Math.pow(w / 2, -1) }
+    static getWidthScalar(w) { return 2 / w }
     static getScaled(h, w) {
         let widthScalar = Parabola.getWidthScalar(w)
         return function (x) {
