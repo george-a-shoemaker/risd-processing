@@ -115,12 +115,22 @@ const winWidth  = 800
 const winHeight = 450
 
 function setup() {
+
+    const canvas = createCanvas(winWidth, winHeight)
+    canvas.parent('sketch-holder');
+    canvas.style("display", "block");
+
     stroke(0);
     frameRate(fps);
     textSize(16);
     
-    input = createInput('');
+    // This is a hack
+    // For whatever reason, the button / input position coords are relative to the DOM, not the canvas
+    let canvasPosition = _renderer.position()
+    
+    input = createInput(999999999);
     input.position(canvasPosition.x + 30, canvasPosition.y+30);
+
     button = createButton('submit');
     button.position(canvasPosition.x + 184, canvasPosition.y +30);
     button.mousePressed( () => {
@@ -132,20 +142,10 @@ function setup() {
         sequenceString = numberArray.join(', ')
     });
 
-    console.log(userStartAudio == null)
 
+    // Initialize
     reset([9])
-    console.log(el in input)
-    sequenceString = 9 
-
-    const canvas = createCanvas(winWidth, winHeight)
-    canvas.parent('sketch-holder');
-    canvas.style("display", "block");
-   
-    // This is a hack
-    // For whatever reason, the button / input position coords are relative to the DOM, not the canvas
-    let canvasPosition = _renderer.position()
-   
+    sequenceString = 9
 }
 
 function draw() {
