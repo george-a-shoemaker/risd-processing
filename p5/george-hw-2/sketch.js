@@ -111,6 +111,15 @@ function reset(sequence) {
     }
 }
 
+function onSubmit() {
+    let parsed = parseInput(input.value())
+    if (parsed == null) return
+
+    let numberArray = parsed.split('').map( c => parseInt(c) )
+    reset(numberArray)
+    sequenceString = numberArray.join(', ')
+}
+
 const winWidth  = 800
 const winHeight = 450
 
@@ -133,14 +142,7 @@ function setup() {
 
     button = createButton('submit');
     button.position(canvasPosition.x + 184, canvasPosition.y + 30);
-    button.mousePressed( () => {
-        let parsed = parseInput(input.value())
-        if (parsed == null) return
-
-        let numberArray = parsed.split('').map( c => parseInt(c) )
-        reset(numberArray)
-        sequenceString = numberArray.join(', ')
-    });
+    button.mousePressed( onSubmit );
 
 
     // Initialize
@@ -160,3 +162,7 @@ function draw() {
 function mousePressed() {
     userStartAudio();
 }
+
+function keyPressed() {
+    if (keyCode === ENTER) onSubmit()
+  }
