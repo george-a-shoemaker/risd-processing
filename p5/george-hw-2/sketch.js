@@ -55,11 +55,11 @@ function parseInput(str) {
 
 // Notes in Hertz, they all sound nice together
 //            C        F          A
-let notes = [ 261.626,  349.228,  440,
+const notes = [ 261.626,  349.228,  440,
               523.251,  698.456,  880,
              1046.502, 1396.913, 1760,
              2093.005 ]
-let oscs = notes.map( note => new p5.Oscillator(note, 'sine') )
+const oscs = notes.map( note => new p5.Oscillator(note, 'sine') )
 
 
 const h = 4;         // height of the lowest toss
@@ -126,13 +126,13 @@ function setup() {
     
     // This is a hack
     // For whatever reason, the button / input position coords are relative to the DOM, not the canvas
-    let canvasPosition = _renderer.position()
+    const canvasPosition = _renderer.position()
     
-    input = createInput(999999999);
-    input.position(canvasPosition.x + 30, canvasPosition.y+30);
+    input = createInput(522);
+    input.position(canvasPosition.x + 30, canvasPosition.y + 30);
 
     button = createButton('submit');
-    button.position(canvasPosition.x + 184, canvasPosition.y +30);
+    button.position(canvasPosition.x + 184, canvasPosition.y + 30);
     button.mousePressed( () => {
         let parsed = parseInput(input.value())
         if (parsed == null) return
