@@ -6,3 +6,4 @@
   - [p5.js](https://p5js.org/)
   - Interactive musical patterns based on juggling pattern theory
 - [Topic 3: Pseudo-3D](https://jorgezapatero.github.io/risd-processing/p5/george-hw-3/george-hw-3.html)
+- [Topic 4: Game](https://jorgezapatero.github.io/risd-processing/p5/george-hw-3/george-hw-4.html)

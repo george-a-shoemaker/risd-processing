@@ -3,7 +3,6 @@ class Game {
     constructor(width, height, cellSize) {
         this.baseSpeed = 5
         this.speedScalar = 1
-        this.isSlow = true
         this.width = width;
         this.height = height;
         this.reset();
