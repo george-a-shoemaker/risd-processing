@@ -1,121 +1,3 @@
-class Cell {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    static setCellPrototypeFuncsFor(cellSize, canvasOffset) {
-        Cell.prototype.size = cellSize
-        Cell.prototype.getAnchorX = function() { return this.x * cellSize + canvasOffset }
-        Cell.prototype.getAnchorY = function() { return this.y * cellSize + canvasOffset }
-        Cell.prototype.draw = function(color, cornerR) {
-            fill(color)
-            strokeWeight(0)
-            rect(this.getAnchorX(), this.getAnchorY(), cellSize, cellSize, cornerR);
-        }
-    }
-}
-
-class EyeDrawer {
-    static drawSquareEye(cell, dir) {
-        return () => { 
-            const halfSize = cell.size/2
-            let x = cell.getAnchorX() + halfSize/2
-            let y = cell.getAnchorY() + halfSize/2
-
-            fill(color('white')) 
-            noStroke()
-            rect(x,y, halfSize, halfSize)
-
-            fill(color('black'))
-            x = cell.getAnchorX() + halfSize/4 + halfSize/2
-            y = cell.getAnchorY() + halfSize/4 + halfSize/2
-
-            switch (dir) {
-                case 0: x-=3; break;
-                case 1: y-=3; break;
-                case 2: x+=3; break;
-                case 3: y+=3;
-            }
-
-            rect(x, y, halfSize/2, halfSize/2)
-        }
-    }
-    static drawOpenEye(cell, dir) {
-        return () => {
-            const halfSize = cell.size/2
-            let x = cell.getAnchorX() + halfSize 
-            let y = cell.getAnchorY() + halfSize 
-    
-            stroke(color('black'))
-            strokeWeight(0.2)
-            fill(color('white'))
-            
-            ellipse(x, y, halfSize, halfSize)
-
-            switch (dir) {
-                case 0: x-=2; break;
-                case 1: y-=2; break;
-                case 2: x+=2; break;
-                case 3: y+=2;
-            }
-
-            stroke(color('black'))
-            fill(color('black'))
-            ellipse(x, y, 4, 4)
-        }
-    }
-
-    static drawClosedEye(cell, dir) {
-        return () => {
-            const halfSize = cell.size/2
-            let centerX = cell.getAnchorX() + halfSize
-            let centerY = cell.getAnchorY() + halfSize 
-    
-            stroke(color('black')) 
-            let x1 = centerX
-            let y1 = centerY
-            let x2 = centerX
-            let y2 = centerY
-    
-            switch (dir) {
-                case 0: case 2: x1-=3.5; x2+=3.5; break;
-                case 1: case 3: y1-=3.5; y2+=3.5;
-            }
-    
-            stroke(color('black'))
-            strokeWeight(1.8)
-            line(x1, y1, x2, y2)
-
-            strokeWeight(0)
-        }
-    }
-
-    static drawDeadEye(cell) {
-        return () => {
-            let thirdSize = cell.size/3
-            let x1 = cell.getAnchorX() + thirdSize
-            let y1 = cell.getAnchorY() + thirdSize
-            let x2 = x1 + thirdSize
-            let y2 = y1 + thirdSize
-
-            stroke(color('black'))
-            strokeWeight(1.5)
-            line(x1, y1, x2, y2)
-            line(x1, y2, x2, y1)
-        }
-    }
-}
-
-Cell.prototype.equalTo = function(that) {
-    return this.x === that.x && this.y === that.y
-}
-
-Cell.prototype.hashKey = function() {
-    return this.x.toString() + ',' + this.y.toString()
-}
-
-
 class Game {
 
     constructor(width, height, cellSize) {
@@ -145,7 +27,6 @@ class Game {
             text(`You got Schnekk'd !!`, 100, 190)
             text('Score: ' + this.score, 170, 230)
             text('Length: ' + this.snake.body.length, 165, 270)
-
         }
 
         let speedX = 30
@@ -184,7 +65,6 @@ class Game {
         for (const cell of occupiedCells) {
             delete this.openSpacesDict[cell.hashKey()]
         }
-       
     }
 
     getFps() { return this.baseSpeed * this.speedScalar }
@@ -210,12 +90,7 @@ class Game {
         this.nextDir = keyCode - 37
     }
 
-    onEatApple() {
-        
-    }
-    
     step() {
-
         let head = this.snake.getHead()
         let x = head.x
         let y = head.y
@@ -295,28 +170,6 @@ class Game {
         if (this.isOver) this.drawGameOver()
     }
 }
-
-
-class Snake {
-    constructor(initialCell) {
-        this.body = [initialCell]
-        this.eatenAppleDict = {}
-    }
-
-    getHead() { return this.body[0] }
-    getTail() { return this.body[this.body.length - 1] }
-    pushHead(cell) { this.body.unshift(cell) }
-    pushTail(cell) { this.body.push(cell) }
-    popTail() { return this.body.pop() }
-    draw(snakeColor, drawEye) {
-        for (const cell of this.body) { cell.draw(snakeColor) }
-        for (const key in this.eatenAppleDict) {
-            this.eatenAppleDict[key].draw(color('#080'))
-        }
-        drawEye()
-    }
-}
-
 
 let game;
 let keyPressDict = {}
