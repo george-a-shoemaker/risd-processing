@@ -1,1 +1,1 @@
-GitHub Pages link: https://jorgezapatero.github.io/risd-processing/
+GitHub Pages link: https://george-a-shoemaker.github.io/risd-processing/
