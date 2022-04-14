@@ -315,9 +315,9 @@ function setup() {
     background(10);
 
     let cellSize = 20
+    Cell.setupPrototype(cellSize, canvasOffset)
     let gameDim = floor(canvasDim/cellSize)
     game = new Game(gameDim, gameDim, cellSize)
-    Cell.setupPrototype(cellSize, canvasOffset)
 
     frameRate(game.fps); 
 
