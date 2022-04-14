@@ -1,8 +1,108 @@
-class Game {
+// George Shoemaker
+// Schnekk
+// April 2020, covid-19 lockdown
 
+class Cell {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    static setupPrototype(cellSize, canvasOffset) {
+        Cell.prototype.size = cellSize
+        Cell.prototype.canvasOffset = canvasOffset
+        Object.defineProperty(Cell.prototype, "anchorX", {
+            get: function() {  return this.x * this.size + this.canvasOffset},
+        })
+        Object.defineProperty(Cell.prototype, "anchorY", {
+            get: function() {  return this.y * this.size + this.canvasOffset},
+        })
+        Cell.prototype.draw = function(color, cornerR) {
+            fill(color)
+            strokeWeight(0)
+            rect(this.anchorX, this.anchorY, cellSize, cellSize, cornerR);
+        }
+
+        Cell.prototype.equalTo = function(that) {
+            return this.x === that.x && this.y === that.y
+        }
+        Cell.prototype.hashKey = function() {
+            return this.x.toString() + ',' + this.y.toString()
+        }
+    }
+}
+
+class EyeDrawer {
+    static drawSquareEye(cell, dir) {
+        return () => { 
+            const halfSize = cell.size/2
+            let x = cell.anchorX + halfSize/2
+            let y = cell.anchorY + halfSize/2
+
+            fill(color('white')) 
+            noStroke()
+            rect(x,y, halfSize, halfSize)
+
+            fill(color('black'))
+            x = cell.anchorX + halfSize/4 + halfSize/2
+            y = cell.anchorY + halfSize/4 + halfSize/2
+
+            switch (dir) {
+                case 0: x-=3; break;
+                case 1: y-=3; break;
+                case 2: x+=3; break;
+                case 3: y+=3;
+            }
+
+            rect(x, y, halfSize/2, halfSize/2)
+        }
+    }
+    static drawClosedEye(cell, dir) {
+        return () => {
+            const halfSize = cell.size/2
+            let centerX = cell.anchorX + halfSize
+            let centerY = cell.anchorY + halfSize 
+    
+            stroke(color('black')) 
+            let x1 = centerX
+            let y1 = centerY
+            let x2 = centerX
+            let y2 = centerY
+    
+            switch (dir) {
+                case 0: case 2: x1-=3.5; x2+=3.5; break;
+                case 1: case 3: y1-=3.5; y2+=3.5;
+            }
+    
+            stroke(color('black'))
+            strokeWeight(1.8)
+            line(x1, y1, x2, y2)
+
+            strokeWeight(0)
+        }
+    }
+    static drawDeadEye(cell) {
+        return () => {
+            let thirdSize = cell.size/3
+            let x1 = cell.anchorX + thirdSize
+            let y1 = cell.anchorY + thirdSize
+            let x2 = x1 + thirdSize
+            let y2 = y1 + thirdSize
+
+            stroke(color('black'))
+            strokeWeight(1.5)
+            line(x1, y1, x2, y2)
+            line(x1, y2, x2, y1)
+        }
+    }
+}
+
+
+class Game {
     constructor(width, height, cellSize) {
         this.baseSpeed = 5
         this.speedScalar = 1
+        this.isSlow = true
         this.width = width;
         this.height = height;
         this.reset();
@@ -10,7 +110,7 @@ class Game {
         const scoreX =  width * cellSize - 40;
         const scoreY = height * cellSize - 22;
 
-        this.drawScore = function() {
+        this.drawScore = () => {
             fill(color('#dd0'))
             strokeWeight(3)
             stroke(0)
@@ -18,7 +118,7 @@ class Game {
             text(this.score, scoreX, scoreY); 
         }
 
-        this.drawGameOver = function() {
+        this.drawGameOver = () => {
             fill(color("#dd0"))
             strokeWeight(3)
             stroke(0)
@@ -26,12 +126,13 @@ class Game {
             text(`You got Schnekk'd !!`, 100, 190)
             text('Score: ' + this.score, 170, 230)
             text('Length: ' + this.snake.body.length, 165, 270)
+
         }
 
         let speedX = 30
         let speedY = height * cellSize - 22
 
-        this.drawSpeed = function() {
+        this.drawSpeed = () => {
             fill(color("#dd0"))
             strokeWeight(3)
             stroke(0)
@@ -64,13 +165,14 @@ class Game {
         for (const cell of occupiedCells) {
             delete this.openSpacesDict[cell.hashKey()]
         }
+       
     }
 
-    getFps() { return this.baseSpeed * this.speedScalar }
+    get fps() { return this.baseSpeed * this.speedScalar }
 
     setPause(bool) {
         this.isPaused = bool
-        frameRate( bool ? 0 : this.getFps() )
+        frameRate( bool ? 0 : this.fps )
     }
 
     togglePause() { this.setPause(!this.isPaused) }
@@ -79,7 +181,7 @@ class Game {
         return cell.x >=0 && cell.x < this.width && cell.y >= 0 && cell.y < this.height
     }
 
-    getRandomOpenCell() {
+    get randomOpenCell() {
         return this.openSpacesDict[random(Object.keys(this.openSpacesDict))]
     }
 
@@ -89,7 +191,12 @@ class Game {
         this.nextDir = keyCode - 37
     }
 
+    onEatApple() {
+        
+    }
+    
     step() {
+
         let head = this.snake.getHead()
         let x = head.x
         let y = head.y
@@ -140,7 +247,7 @@ class Game {
         if (this.apple.equalTo(newHead)) {
             this.score += this.speedScalar*10
             this.snake.eatenAppleDict[newHead.hashKey()] = newHead
-            this.apple = this.getRandomOpenCell()
+            this.apple = this.randomOpenCell
             this.justAte = true
         } else {
             this.justAte = false
@@ -149,7 +256,7 @@ class Game {
 
     setSpeedScalar(scalar) {
         this.speedScalar = scalar
-        frameRate(this.getFps())
+        frameRate(this.fps)
     }
     
     draw() {
@@ -170,6 +277,31 @@ class Game {
     }
 }
 
+
+class Snake {
+    constructor(initialCell) {
+        this.body = [initialCell]
+        this.eatenAppleDict = {}
+    }
+
+    getHead() { return this.body[0] }
+    getTail() { return this.body[this.body.length - 1] }
+    pushHead(cell) { this.body.unshift(cell) }
+    pushTail(cell) { this.body.push(cell) }
+    popTail() { return this.body.pop() }
+    draw(snakeColor, drawEye) {
+        for (const cell of this.body) { cell.draw(snakeColor) }
+        for (const key in this.eatenAppleDict) {
+            this.eatenAppleDict[key].draw(color('#080'))
+        }
+        drawEye()
+    }
+}
+
+
+// ===================
+// GAME SETUP AND LOOP
+// ===================
 let game;
 let keyPressDict = {}
 
@@ -185,16 +317,16 @@ function setup() {
     let cellSize = 20
     let gameDim = floor(canvasDim/cellSize)
     game = new Game(gameDim, gameDim, cellSize)
-    Cell.setCellPrototypeFuncsFor(cellSize, canvasOffset)
+    Cell.setupPrototype(cellSize, canvasOffset)
 
-    frameRate(game.getFps()); 
+    frameRate(game.fps); 
 
     // Add game state controls
-    keyPressDict[49] = () => game.setSpeedScalar(1)  // Type 1 for slow mode
-    keyPressDict[50] = () => game.setSpeedScalar(2)  // Type 2 for fast mode
-    keyPressDict[51] = () => game.setSpeedScalar(3)  // Type 3 for turbo mode
-    keyPressDict[32] = () => game.togglePause(false) // Type SPACE to toggle pause
-    keyPressDict[13] = () => game.reset()  // Enter to reset (and unpause)
+    keyPressDict[49] = () => game.setSpeedScalar(1)  // '1' key
+    keyPressDict[50] = () => game.setSpeedScalar(2)  // '2' key 
+    keyPressDict[51] = () => game.setSpeedScalar(3)  // '3'
+    keyPressDict[32] = () => game.togglePause(false) // 'SPACE'
+    keyPressDict[13] = () => game.reset()  // 'ENTER'
 
 }
 
